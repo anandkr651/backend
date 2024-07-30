@@ -1,4 +1,4 @@
-const asyncHandle = (requestHandler) => {
+const asyncHandler = (requestHandler) => {
     return (req, res, next) => {
         Promise
         .resolve(requestHandler(req, res, next))
@@ -6,7 +6,7 @@ const asyncHandle = (requestHandler) => {
     };
 };
 
-export { asyncHandle };
+export { asyncHandler };
 
 // ***** Higher Order function ******
 /* const asyncHandler = () => {}

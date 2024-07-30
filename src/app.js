@@ -15,10 +15,13 @@ app.use(express.static("public"));
 app.use(cookieParser());   //cookieParser se cookies ka access diye
 
 //route import
-import userRouter from "./routes/user.route.js";
+import userRouter from "./routes/user.routes.js";
 
 //route decelaration
 //http://localhost:3000/api/v1/users/register
 app.use("/api/v1/users", userRouter);
+
+// import videoRoute from "./routes/video.routes.js";
+// app.use("/api/v1/videos",videoRoute);
 
 export { app };

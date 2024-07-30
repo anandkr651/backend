@@ -1,9 +1,9 @@
 import { ApiError } from "../utils/apiError.js";
-import { asyncHandle } from "../utils/asyncHandler.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
 
-export const verifyJWT = asyncHandle(async (req, _, next) => {
+export const verifyJWT = asyncHandler(async (req, _, next) => {
     try {
         //user ko login ke time mi accesstoken diye hai
         // or ka yaha use isliye kiye because mobile application

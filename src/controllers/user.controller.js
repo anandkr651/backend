@@ -1,4 +1,4 @@
-import { asyncHandle } from "../utils/asyncHandler.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/apiError.js";
 import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
@@ -21,7 +21,7 @@ const generateAccessAndRefreshToken = async (userId) => {
     }
 };
 
-const registerUser = asyncHandle(async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
     //get user details from frontend
     //validation - not empty
     //check if user already exists: username,email
@@ -99,7 +99,7 @@ const registerUser = asyncHandle(async (req, res) => {
         .json(new ApiResponse(200, createdUser, "user registured successfully"));
 });
 
-const loginUser = asyncHandle(async (req, res) => {
+const loginUser = asyncHandler(async (req, res) => {
     //req body =>data
     //username =>email
     //find the user
@@ -149,7 +149,7 @@ const loginUser = asyncHandle(async (req, res) => {
         );
 });
 
-const logoutUser = asyncHandle(async (req, res) => {
+const logoutUser = asyncHandler(async (req, res) => {
     //clear the cookie
     //clear rhe accesstoken
 
@@ -175,7 +175,7 @@ const logoutUser = asyncHandle(async (req, res) => {
         .json(new ApiResponse(200, {}, "user logged out"));
 });
 
-const refreshAccessToken = asyncHandle(async (req, res) => {
+const refreshAccessToken = asyncHandler(async (req, res) => {
     //get refreshtoken from the cookie or from req.body
     //verfy the cookie using jwt
     // find the user using the decodedToken._id
@@ -223,7 +223,7 @@ const refreshAccessToken = asyncHandle(async (req, res) => {
     }
 });
 
-const changeCurrentPassword = asyncHandle(async (req, res) => {
+const changeCurrentPassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword } = req.body;
     
     if(!oldPassword || !newPassword){
@@ -243,7 +243,7 @@ const changeCurrentPassword = asyncHandle(async (req, res) => {
         .json(new ApiResponse(200, {}, "password change successfully"));
 });
 
-const getCurrentUser = asyncHandle(async (req, res) => {
+const getCurrentUser = asyncHandler(async (req, res) => {
     return res
         .status(200)
         .json(
@@ -251,7 +251,7 @@ const getCurrentUser = asyncHandle(async (req, res) => {
         );
 });
 
- const updateAccountDetail = asyncHandle(async (req, res) => {
+ const updateAccountDetail = asyncHandler(async (req, res) => {
     const { fullName, email } = req.body;
     if (!(fullName || email)) {
         throw new ApiError(400, "all fields are required");
@@ -277,7 +277,7 @@ const getCurrentUser = asyncHandle(async (req, res) => {
         );
 });
 
-const updateUserAvater = asyncHandle(async (req, res) => {
+const updateUserAvater = asyncHandler(async (req, res) => {
     const avatarLocalPath = req.file?.path;
 
     if (!avatarLocalPath) {
@@ -303,7 +303,7 @@ const updateUserAvater = asyncHandle(async (req, res) => {
         .json(new ApiResponse(200, user, "avatar image updated successfully"));
 });
 
-const updateUserCoverImage = asyncHandle(async (req, res) => {
+const updateUserCoverImage = asyncHandler(async (req, res) => {
     const coverImageLocalPath = req.file?.path;
 
     if (!coverImageLocalPath) {
@@ -329,7 +329,7 @@ const updateUserCoverImage = asyncHandle(async (req, res) => {
         .json(new ApiResponse(200, user, "cover image updated successfully"));
 });
 
-const getUserChannelProfile = asyncHandle(async (req, res) => {
+const getUserChannelProfile = asyncHandler(async (req, res) => {
     const { username } = req.params;  //url se
     if (!username?.trim()) {
         throw new ApiError(400, "username is missing");
@@ -398,7 +398,7 @@ const getUserChannelProfile = asyncHandle(async (req, res) => {
         .json(new ApiResponse(200, channel[0], "User channel fetched successfully"));
 });
 
-const getWatchHistory = asyncHandle(async (req, res) => {
+const getWatchHistory = asyncHandler(async (req, res) => {
     const user = await User.aggregate([
         {
             $match: {
