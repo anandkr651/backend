@@ -5,11 +5,11 @@ const vidoesSchema = new Schema(
     {
         videoFile: {
             type: String, //cloudinary url
-            required: true,
+            // required: true,
         },
         thumbnail: {
             type: String,
-            required: true,
+            // required: true,
         },
         title: {
             type: String,

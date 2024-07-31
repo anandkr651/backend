@@ -53,13 +53,24 @@ const registerUser = asyncHandler(async (req, res) => {
     
     const avatarLocalPath = req.files?.avatar[0]?.path;
     // console.log(req.files);
-
-    //   const coverImageLocalPath = req.files?.coverImage[0]?.path;
-
+    /*avatar: [
+    {
+      fieldname: 'avatar',
+      originalname: 'IMG-20191228-WA0007.jpg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      destination: './public/temp',
+      filename: 'IMG-20191228-WA0007.jpg',
+      path: 'public\\temp\\IMG-20191228-WA0007.jpg',
+      size: 108168
+    }
+  ] */
+    
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is required");
     }
-
+    
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
     let coverImageLocalPath;
     if (
         req.files &&
@@ -76,7 +87,30 @@ const registerUser = asyncHandler(async (req, res) => {
     if (!avatar) {
         throw new ApiError(409, "avatar file is required");
     }
-
+    // console.log(avatar);
+/*{
+  asset_id: '1b3eeacaf8f7c46bae74258c0eb4a2b5',
+  public_id: 'sypqvjpzwldoic2vqpow',
+  version: 1722396522,
+  version_id: '5e986eecd4fa7c8c4c7a7d6aca0c883d',
+  signature: 'd6977756bf6bf920fdf99a8307a75c32dbb082d9',
+  width: 590,
+  height: 1280,
+  format: 'jpg',
+  resource_type: 'image',
+  created_at: '2024-07-31T03:28:42Z',
+  tags: [],
+  bytes: 108168,
+  type: 'upload',
+  etag: 'efb7310ea01877f6858ec1ca029b46f4',
+  placeholder: false,
+  url: 'http://res.cloudinary.com/anand-kumar/image/upload/v1722396522/sypqvjpzwldoic2vqpow.jpg',
+  secure_url: 'https://res.cloudinary.com/anand-kumar/image/upload/v1722396522/sypqvjpzwldoic2vqpow.jpg',
+  asset_folder: '',
+  display_name: 'sypqvjpzwldoic2vqpow',
+  original_filename: 'IMG-20191228-WA0007',
+  api_key: '162155916113427'
+} */
     const user = await User.create({
         fullName,
         avatar: avatar.url,
@@ -97,6 +131,7 @@ const registerUser = asyncHandler(async (req, res) => {
     return res
         .status(201)
         .json(new ApiResponse(200, createdUser, "user registured successfully"));
+        //createdUser ---> yaha pe user ko response bhejene ki liye createdUser likha hua hai.
 });
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -185,36 +220,41 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     //return res with cookie
 
     const incommingRefreshToken =
-        req.cookies?.refreshToken || req.body.refreshToken;
+        req.cookies.refreshToken || req.body.refreshToken;
 
-    if (!incommingRefreshToken) {
-        throw new ApiError(401, "unauthorize request");
-    }
-    try {
-        const decodedToken = jwt.verify( incommingRefreshToken, process.env.REFRESH_TOKEN_SECRET );
-
-        const user = await User.findById(decodedToken?._id);
+        if (!incommingRefreshToken) {
+            throw new ApiError(401, "unauthorize request");
+        }
+        try {
+            const decodedToken = jwt.verify( incommingRefreshToken, process.env.REFRESH_TOKEN_SECRET );
+            
+            const user = await User.findById(decodedToken?._id);
+            // console.log("user detail",user);
 
         if (!user) {
             throw new ApiError(401, "invalid refresh token");
         }
-        if (incommingRefreshToken !== user.refreshToken) {
-            throw new ApiError(401, "refresh token is expire ");
+        if (incommingRefreshToken !== user?.refreshToken) {
+            throw new ApiError(401, "refresh token is expired or used ");
         }
-        const { accessToken, newrefreshToken } = await generateAccessAndRefreshToken(user._id);
-        
-            const options = {
+        const options = {
             httpOnly: true,
             secure: true,
         };
 
+        const {accessToken,refreshToken} = await generateAccessAndRefreshToken(user._id);
+        // console.log("ref",newrefreshToken);
+/*NOTE --->if we change the name refreshToken into newrefreshToken then we get an error so we can not change the name. */
         return res
             .status(200)
             .cookie("accessToken", accessToken, options)
-            .cookie("refreshToken", newrefreshToken, options)
+            .cookie("refreshToken", refreshToken, options)
             .json(
                 new ApiResponse(200,
-                    { accessToken, refreshToken: newrefreshToken },
+                    { 
+                        accessToken, 
+                        refreshToken, 
+                    },
                     "access token refreshed"
                 )
             );
