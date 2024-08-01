@@ -106,7 +106,7 @@ const updateVideo = asyncHandler(async (req, res) => {
 
 })
 
-//error hai abhi cloudinary se video delete nahi ho raha hai
+//data base se video delete ho raha hai but cloudinary se video delete nahi ho raha hai
 const deleteVideo = asyncHandler(async (req, res) => {
     const{videoId}= req.params
     if(!videoId){

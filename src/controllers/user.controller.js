@@ -427,7 +427,6 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
             },
         },
     ]);
-
     console.log(channel);
 
     if (!channel?.length) {
