@@ -108,27 +108,16 @@ const updateVideo = asyncHandler(async (req, res) => {
 
 //error hai abhi cloudinary se video delete nahi ho raha hai
 const deleteVideo = asyncHandler(async (req, res) => {
-    const { videoId } = req.params
+    const{videoId}= req.params
     if(!videoId){
-        throw new ApiError(400,"VideoId is missing")
+        throw new ApiError(400,"videoId is invalid")
     }
-    const video = await Video.findById(videoId)
-    // console.log(video);
-    const cloudinaryPublicId = video.thumbnail;
-    // console.log("cloudinaryPublicId",cloudinaryPublicId);
-// Delete the video from Cloudinary
-try {
-    await cloudinary.uploader.destroy(cloudinaryPublicId, { resource_type: 'video' });
-} catch (error) {
-    throw new ApiError(500, "Failed to delete video from Cloudinary");
-}
 
-// Optionally delete the video document from your database
-await Video.findByIdAndDelete(videoId);
+    const deleteVideo= await Video.findByIdAndDelete(videoId)
 
-return res
-.status(200)
-.json(new ApiResponse(200, null, "Video is deleted"));
+    return res
+    .status(200)
+    .json(new ApiResponse(200,deleteVideo,"the video has been deleted"))
 
 })
 
