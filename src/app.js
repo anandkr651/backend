@@ -18,7 +18,7 @@ app.use(cookieParser());   //cookieParser se cookies ka access diye
 import userRouter from "./routes/user.routes.js";
 
 //route decelaration
-//http://localhost:3000/api/v1/users/register
+//http://localhost:8000/api/v1/users/register
 app.use("/api/v1/users", userRouter);
 
 import videoRoute from "./routes/video.routes.js";
@@ -38,5 +38,11 @@ app.use("/api/v1/playlists",playlistRouter)
 
 import dashboardRouter from "./routes/dashboard.routes.js"
 app.use("/api/v1/dashboards",dashboardRouter)
+
+import healthCheckRouter from "./routes/healthcheck.routes.js"
+app.use("/api/v1/healthchecks",healthCheckRouter)
+
+import subscriptionRouter from "./routes/subscription.routes.js"
+app.use("api/v1/subscriptions",subscriptionRouter)
 
 export { app };
