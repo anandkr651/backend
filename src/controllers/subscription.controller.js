@@ -7,8 +7,11 @@ import {asyncHandler} from "../utils/asyncHandler.js"
 
 
 const toggleSubscription = asyncHandler(async (req, res) => {
-    const {channelId} = req.params
+    const {channelId} = req.params  //userId denan hai
     const userId=req.user._id
+    if(!channelId){
+        throw new ApiError(400,"channelId is missing")
+    }
 
     if(!isValidObjectId(channelId)){
         throw new ApiError(400,"invalid channel id")
@@ -25,7 +28,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     })
 
     if(existingSubsription){
-        await Subscription.findByIdAndUpdate(existingSubsription)
+        await Subscription.findByIdAndDelete(existingSubsription._id)
     }else{
         await Subscription.create({
             subscriber:userId,
@@ -40,6 +43,9 @@ const toggleSubscription = asyncHandler(async (req, res) => {
 // controller to return subscriber list of a channel
 const getUserChannelSubscribers = asyncHandler(async (req, res) => {
     const {channelId} = req.params
+    if(!channelId){
+        throw new ApiError(400,"channelId is missing")
+    }
     if(!isValidObjectId(channelId)){
         throw new ApiError(400,"invalid channel id")
     }
@@ -60,9 +66,7 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
         },
         {
             $addFields:{
-                subscriber:{
-                    $first:"subscriber"
-                }
+                subscriber:{$first:"$subscriber"}
             }
         },
         {
@@ -70,7 +74,7 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
             _id:0,
             'subscriber._id':1,
             'subscriber.username':1,
-            'subscriber.fullname':1,
+            'subscriber.fullName':1,
             'subscriber.email':1,
             'subscriber.avatar':1,
             'subscriber.coverImage':1,
@@ -115,7 +119,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
             _id:0,
             'channel._id':1,
             'channel.username':1,
-            'channel.fullname':1,
+            'channel.fullName':1,
             'channel.email':1,
             'channel.avatar':1,
             'channel.coverImage':1,

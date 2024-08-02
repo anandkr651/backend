@@ -9,10 +9,10 @@ app.use(
         credentials: true,
     })
 );
-app.use(express.json({ limit: "16kb" }));
-app.use(express.urlencoded({ extended: true, limit: "16kb" }));
-app.use(express.static("public"));
-app.use(cookieParser());   //cookieParser se cookies ka access diye
+app.use(express.json({ limit: "16kb" })); //when the file come from the json formate.
+app.use(express.urlencoded({ extended: true, limit: "16kb" }));  //it can encoded the url.
+app.use(express.static("public"));  //it is a location where my photo and video are save.
+app.use(cookieParser());   //cookieParser se cookies ka access diye.
 
 //route import
 import userRouter from "./routes/user.routes.js";
@@ -43,6 +43,6 @@ import healthCheckRouter from "./routes/healthcheck.routes.js"
 app.use("/api/v1/healthchecks",healthCheckRouter)
 
 import subscriptionRouter from "./routes/subscription.routes.js"
-app.use("api/v1/subscriptions",subscriptionRouter)
+app.use("/api/v1/subscriptions",subscriptionRouter)
 
 export { app };
