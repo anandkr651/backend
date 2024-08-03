@@ -40,9 +40,10 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200,null,"subscription toggled successfully"))
 })
 
+// chai aur code ko kon kon subscriber kiya hai
 // controller to return subscriber list of a channel
 const getUserChannelSubscribers = asyncHandler(async (req, res) => {
-    const {channelId} = req.params
+    const {channelId} = req.params   //chai aur code ka userId
     if(!channelId){
         throw new ApiError(400,"channelId is missing")
     }
@@ -89,6 +90,7 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200,subscribers,"Subscriber fetched successfully"))
 
 })
+
 
 // controller to return channel list to which user has subscribed
 const getSubscribedChannels = asyncHandler(async (req, res) => {
