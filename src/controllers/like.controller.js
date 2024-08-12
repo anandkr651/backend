@@ -101,10 +101,14 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         throw new ApiError(400, "invalid userId");
     }
 
-    const likeVideo = await Like.find({
+    const likeVideo = await Like.find({  //this function is used to find particular data from the mongodb database
         likedBy: userId,
         video: { $exists: true },
-    }).populate("video", "title description videoFile");
+    }).populate("video", "title description videoFile duration");
+    /*The $exists operator matches documents that contain or do not contain a specified field, including documents where the field value is null.
+    The following query specifies the query predicate video: { $exists: true }:
+    The results consist of those documents that contain the field video, including the document whose field video contains a null value:
+    */
 
     if (!likeVideo.length) {
         throw new ApiError(404, "no liked video found");
@@ -113,5 +117,28 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         new ApiResponse(200,likeVideo.map((like) => like.video),"liked video fetch successfully")
     );
 });
+/*{
+    "statusCode": 200,
+    "data": [
+        {
+            "_id": "66ab4f15f222553de1d98382",
+            "videoFile": "http://res.cloudinary.com/anand-kumar/video/upload/v1722502930/vlj7bkudibw0dqgkxik0.mp4",
+            "title": "oneA",
+            "description": "oneA",
+            "duration": 9.322667
+        },
+        {
+            "_id": "66ab4f80f222553de1d98389",
+            "videoFile": "http://res.cloudinary.com/anand-kumar/video/upload/v1722503036/nntffvpaos3zktfp7l1o.mp4",
+            "title": "two",
+            "description": "two",
+            "duration": 9.322667
+        }
+    ],
+    "message": "liked video fetch successfully",
+    "success": true
+} */
 
 export { toggleCommentLike, toggleTweetLike, toggleVideoLike, getLikedVideos };
+
+//.populate("video", "title description videoFile");

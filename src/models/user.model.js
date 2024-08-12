@@ -52,14 +52,14 @@ const userSchema = new Schema(
 );
 
 userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) return next();
-
+    if (!this.isModified("password")) return next(); //isModified means it can check that the password field is come or not.
+//if the user can change the avatar then it can save it.in this way the password field not come.
     this.password = await bcrypt.hash(this.password, 10);
     next();
 });
 
 userSchema.methods.isPasswordCorrect = async function (password) {
-    return await bcrypt.compare(password, this.password);
+    return await bcrypt.compare(password, this.password); //return boolean
 };
 
 userSchema.methods.generateAccessToken = function () {

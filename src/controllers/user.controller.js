@@ -47,8 +47,8 @@ const registerUser = asyncHandler(async (req, res) => {
     ) {
         throw new ApiError(400, "all field are required");
     }
-    const existedUser = await User.findOne({
-        $or: [{ username }, { email }],
+    const existedUser = await User.findOne({  //findOne means if multiple document match the condition, then it return the first document satisfying the condition.
+        $or: [{ username }, { email }], //this operator is used to performed logical or operation on the array of two or more experation and select or reterive only those document that matched at least one of the given experation in the array.
     });
 
     if (existedUser) {
@@ -204,7 +204,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
         req.user._id,
         {
-            $unset: {
+            $unset: { //the unset operator is used to remove a specific field from a mongodb document.
                 refreshToken: 1, // this removes the field from document
             },
         },
@@ -320,7 +320,7 @@ const updateAccountDetail = asyncHandler(async (req, res) => {
     const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
-            $set: {
+            $set: {   //the set operator replace the value of a field with the specified value
                 fullName,
                 email,
             },
@@ -444,7 +444,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
                 },
                 isSubscribed: {
                     $cond: {
-                        if: { $in: [req.user?._id, "$subscribers.subscriber"] },
+                        if: { $in: [req.user?._id, "$subscribers.subscriber"] },  //return a boolean indicating whether a specified value is in an array.
                         then: true,
                         else: false,
                     },
@@ -527,7 +527,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
                         },
                     },
                     {
-                        $addFields: {
+                        $addFields: { //we can add the field by two different types :-- $first OR $arrayElemAt -- Returns the element at the specified array index.
                             owner: {
                                 $first: "$owner", //yaha pe owner ek field hai es liye $(doller) ka use kiye hai. 
                             },
