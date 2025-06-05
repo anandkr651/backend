@@ -39,7 +39,7 @@ const addComment = asyncHandler(async (req, res) => {
 
     const { content } = req.body;
     if (!content) {
-        throw new ApiError(400, "connent is missing");
+        throw new ApiError(400, "content is missing");
     }
     const comment = await Comment.create({
         content,
